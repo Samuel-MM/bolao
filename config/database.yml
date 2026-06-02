@@ -1,0 +1,24 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: bolao_da_copa_development
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5433) %>
+  username: <%= ENV.fetch("DB_USER", nil) %>
+  password: <%= ENV.fetch("DB_PASSWORD", nil) %>
+
+test:
+  <<: *default
+  database: bolao_da_copa_test
+  host: <%= ENV.fetch("DB_HOST", "localhost") %>
+  port: <%= ENV.fetch("DB_PORT", 5433) %>
+  username: <%= ENV.fetch("DB_USER", nil) %>
+  password: <%= ENV.fetch("DB_PASSWORD", nil) %>
+
+production:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>
