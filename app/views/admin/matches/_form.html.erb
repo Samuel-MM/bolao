@@ -1,0 +1,64 @@
+<%
+  input_style = "width:100%; border:1px solid #d1d5db; border-radius:8px; padding:9px 12px; font-size:14px; outline:none; box-sizing:border-box; font-family:inherit;"
+  label_style = "display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:6px;"
+%>
+<%= form_with model: [:admin, @pool, match] do |f| %>
+  <% if match.errors.any? %>
+    <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:12px 16px; margin-bottom:16px;">
+      <ul style="margin:0; padding-left:16px; font-size:13px; color:#dc2626;">
+        <% match.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+    <div>
+      <%= f.label :home_team, "Time da casa", style: label_style %>
+      <%= f.text_field :home_team, placeholder: "Brasil", style: input_style %>
+    </div>
+    <div>
+      <%= f.label :away_team, "Time visitante", style: label_style %>
+      <%= f.text_field :away_team, placeholder: "Argentina", style: input_style %>
+    </div>
+  </div>
+
+  <div style="margin-bottom:16px;">
+    <%= f.label :kickoff_at, "Data e hora do jogo", style: label_style %>
+    <%= f.datetime_local_field :kickoff_at,
+          value: match.kickoff_at&.strftime("%Y-%m-%dT%H:%M"),
+          style: input_style %>
+  </div>
+
+  <div style="margin-bottom:16px;">
+    <%= f.label :api_football_id, "ID no API-Football (opcional)", style: label_style %>
+    <%= f.number_field :api_football_id, style: input_style, placeholder: "ex: 867891" %>
+  </div>
+
+  <% if match.persisted? %>
+    <div style="border-top:1px solid #f3f4f6; padding-top:16px; margin-top:8px; margin-bottom:16px;">
+      <p style="font-size:12px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; margin-bottom:12px;">Resultado</p>
+      <div style="margin-bottom:16px;">
+        <%= f.label :status, "Status do jogo", style: label_style %>
+        <%= f.select :status,
+              [["Agendado", "scheduled"], ["Ao vivo", "live"], ["Encerrado", "finished"], ["Cancelado", "cancelled"]],
+              {}, style: "#{input_style} background:#fff;" %>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div>
+          <%= f.label :home_score, "Gols — time da casa", style: label_style %>
+          <%= f.number_field :home_score, min: 0, style: input_style, placeholder: "0" %>
+        </div>
+        <div>
+          <%= f.label :away_score, "Gols — time visitante", style: label_style %>
+          <%= f.number_field :away_score, min: 0, style: input_style, placeholder: "0" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div style="display:flex; gap:12px; align-items:center; margin-top:8px;">
+    <%= f.submit match.persisted? ? "Salvar" : "Criar Jogo",
+          style: "padding:9px 20px; border-radius:8px; font-size:13px; font-weight:600; color:#fff; border:none; cursor:pointer; background:#009C3B;" %>
+    <%= link_to "Cancelar", admin_pool_matches_path(@pool), style: "font-size:13px; color:#6b7280; text-decoration:none;" %>
+  </div>
+<% end %>

@@ -1,0 +1,44 @@
+<p style="font-size:15px; color:#374151; margin:0 0 16px;">Olá, <strong><%= @user.name.split.first %></strong>.</p>
+
+<div style="background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:20px; margin-bottom:24px;">
+  <p style="margin:0; font-size:16px; font-weight:700; color:#dc2626;">❌ Comprovante não aprovado</p>
+  <p style="margin:8px 0 0; font-size:14px; color:#991b1b;">
+    O comprovante da aposta abaixo não foi aprovado pelo organizador.
+  </p>
+</div>
+
+<table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
+  <tr style="background:#f8fafc;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0; width:40%;">Jogo</td>
+    <td style="padding:12px 16px; font-size:13px; font-weight:600; color:#111827; border-bottom:1px solid #e2e8f0;"><%= @match.home_team %> x <%= @match.away_team %></td>
+  </tr>
+  <tr>
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0;">Seu palpite</td>
+    <td style="padding:12px 16px; font-size:18px; font-weight:800; color:#002776; border-bottom:1px solid #e2e8f0;"><%= @bet.home_score %> × <%= @bet.away_score %></td>
+  </tr>
+  <tr>
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280;">Valor</td>
+    <td style="padding:12px 16px; font-size:14px; color:#374151;">R$ <%= number_with_precision(@payment.amount, precision: 2, separator: ',', delimiter: '.') %></td>
+  </tr>
+</table>
+
+<% if @payment.rejection_reason.present? %>
+  <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:16px; margin-bottom:24px;">
+    <p style="margin:0 0 6px; font-size:12px; font-weight:700; color:#92400e; text-transform:uppercase; letter-spacing:.05em;">Motivo informado pelo organizador</p>
+    <p style="margin:0; font-size:14px; color:#78350f;"><%= @payment.rejection_reason %></p>
+  </div>
+<% end %>
+
+<p style="font-size:14px; color:#374151; margin:0 0 24px;">
+  Para regularizar, acesse o sistema, faça o pagamento novamente via PIX e envie um novo comprovante.
+</p>
+
+<table cellpadding="0" cellspacing="0" style="margin:0 auto 24px;">
+  <tr>
+    <td style="background:#009C3B; border-radius:8px; padding:12px 28px;">
+      <a href="<%= payment_url(@payment) %>" style="color:#ffffff; font-size:14px; font-weight:700; text-decoration:none;">
+        Ir para o pagamento →
+      </a>
+    </td>
+  </tr>
+</table>

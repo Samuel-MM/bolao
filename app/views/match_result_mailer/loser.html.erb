@@ -1,0 +1,20 @@
+<p style="font-size:15px; color:#374151; margin:0 0 16px;">Olá, <strong><%= @user.name.split.first %></strong>! 👋</p>
+
+<p style="font-size:14px; color:#374151; margin:0 0 20px;">O resultado do jogo saiu. Dessa vez não foi, mas o Brasil segue em frente! 💪</p>
+
+<table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
+  <tr style="background:#f8fafc;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0; width:40%;">Jogo</td>
+    <td style="padding:12px 16px; font-size:13px; font-weight:600; color:#111827; border-bottom:1px solid #e2e8f0;"><%= @match.home_team %> x <%= @match.away_team %></td>
+  </tr>
+  <tr>
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0;">Resultado oficial</td>
+    <td style="padding:12px 16px; font-size:20px; font-weight:800; color:#009C3B; border-bottom:1px solid #e2e8f0;"><%= @match.home_score %> × <%= @match.away_score %></td>
+  </tr>
+  <tr style="background:#fef2f2;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280;">Seu palpite</td>
+    <td style="padding:12px 16px; font-size:20px; font-weight:800; color:#dc2626;"><%= @bet.home_score %> × <%= @bet.away_score %> ❌</td>
+  </tr>
+</table>
+
+<p style="font-size:13px; color:#6b7280; margin:0;">Fique de olho nos próximos jogos — ainda há chance! 🇧🇷</p>

@@ -1,0 +1,113 @@
+<% content_for :page_title, "Dashboard" %>
+
+<%# Stats cards %>
+<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px;">
+  <div style="background:#fff; border-radius:12px; border:1px solid #e5e7eb; padding:20px; border-top:3px solid #009C3B; box-shadow:0 1px 3px rgba(0,0,0,.06);">
+    <p style="font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;">Bolões</p>
+    <p style="font-size:32px; font-weight:800; color:#009C3B; line-height:1;"><%= Pool.count %></p>
+    <p style="font-size:12px; color:#9ca3af; margin-top:4px;"><%= Pool.open.count %> aberto(s)</p>
+  </div>
+  <div style="background:#fff; border-radius:12px; border:1px solid #e5e7eb; padding:20px; border-top:3px solid #002776; box-shadow:0 1px 3px rgba(0,0,0,.06);">
+    <p style="font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;">Participantes</p>
+    <p style="font-size:32px; font-weight:800; color:#002776; line-height:1;"><%= PoolMembership.approved.count %></p>
+    <p style="font-size:12px; color:#9ca3af; margin-top:4px;"><%= PoolMembership.pending.count %> aguardando aprovação</p>
+  </div>
+  <div style="background:#fff; border-radius:12px; border:1px solid #e5e7eb; padding:20px; border-top:3px solid #009C3B; box-shadow:0 1px 3px rgba(0,0,0,.06);">
+    <p style="font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;">Apostas</p>
+    <p style="font-size:32px; font-weight:800; color:#009C3B; line-height:1;"><%= Bet.count %></p>
+    <p style="font-size:12px; color:#9ca3af; margin-top:4px;"><%= Payment.confirmed.count %> pagas</p>
+  </div>
+  <div style="background:#fff; border-radius:12px; border:1px solid #e5e7eb; padding:20px; border-top:3px solid #d97706; box-shadow:0 1px 3px rgba(0,0,0,.06);">
+    <p style="font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px;">Pendentes</p>
+    <p style="font-size:32px; font-weight:800; color:#d97706; line-height:1;"><%= Payment.submitted.count %></p>
+    <p style="font-size:12px; color:#9ca3af; margin-top:4px;">comprovante(s) para revisar</p>
+  </div>
+</div>
+
+<%# Two-column cards %>
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;">
+
+  <%# Aprovações %>
+  <div style="background:#fff; border-radius:12px; border:1px solid #e5e7eb; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06);">
+    <div style="padding:16px 20px; border-bottom:1px solid #f3f4f6; display:flex; align-items:center; justify-content:space-between;">
+      <h2 style="font-size:14px; font-weight:600; color:#111827;">Aprovações pendentes</h2>
+      <% if @pending_memberships.any? %>
+        <span style="background:#fef3c7; color:#92400e; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;"><%= @pending_memberships.count %></span>
+      <% end %>
+    </div>
+    <% if @pending_memberships.any? %>
+      <ul>
+        <% @pending_memberships.each do |m| %>
+          <li style="padding:12px 20px; border-bottom:1px solid #f9fafb; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <p style="font-size:13px; font-weight:500; color:#111827;"><%= m.user.name %></p>
+              <p style="font-size:12px; color:#6b7280; margin-top:1px;"><%= m.pool.name %></p>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <%= button_to "Aprovar", approve_admin_pool_pool_membership_path(m.pool, m), method: :patch,
+                    style: "font-size:12px; font-weight:600; color:#fff; padding:4px 12px; border-radius:6px; border:none; cursor:pointer; background:#009C3B;" %>
+              <%= button_to "Rejeitar", reject_admin_pool_pool_membership_path(m.pool, m), method: :patch,
+                    style: "font-size:12px; font-weight:600; color:#fff; padding:4px 12px; border-radius:6px; border:none; cursor:pointer; background:#dc2626;" %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p style="padding:32px; text-align:center; font-size:13px; color:#9ca3af;">Nenhuma solicitação pendente.</p>
+    <% end %>
+  </div>
+
+  <%# Pagamentos %>
+  <div style="background:#fff; border-radius:12px; border:1px solid #e5e7eb; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06);">
+    <div style="padding:16px 20px; border-bottom:1px solid #f3f4f6; display:flex; align-items:center; justify-content:space-between;">
+      <h2 style="font-size:14px; font-weight:600; color:#111827;">Comprovantes para confirmar</h2>
+      <% if @pending_payments.any? %>
+        <span style="background:#fef3c7; color:#92400e; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;"><%= @pending_payments.count %></span>
+      <% end %>
+    </div>
+    <% if @pending_payments.any? %>
+      <ul>
+        <% @pending_payments.each do |p| %>
+          <li style="padding:12px 20px; border-bottom:1px solid #f9fafb; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <p style="font-size:13px; font-weight:500; color:#111827;"><%= p.user.name %></p>
+              <p style="font-size:12px; color:#6b7280; margin-top:1px;">
+                <%= p.match.home_team %> x <%= p.match.away_team %> —
+                <strong style="color:#009C3B;">R$ <%= number_with_precision(p.amount, precision: 2, separator: ',', delimiter: '.') %></strong>
+              </p>
+            </div>
+            <%= link_to "Analisar →", admin_payment_path(p),
+                  style: "font-size:12px; font-weight:600; color:#002776; white-space:nowrap;" %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p style="padding:32px; text-align:center; font-size:13px; color:#9ca3af;">Nenhum comprovante aguardando.</p>
+    <% end %>
+  </div>
+</div>
+
+<%# Reembolsos %>
+<% if @refund_requests.any? %>
+  <div style="background:#fff; border-radius:12px; border:1px solid #e5e7eb; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06);">
+    <div style="padding:16px 20px; border-bottom:1px solid #f3f4f6; display:flex; align-items:center; gap:8px;">
+      <span style="width:8px; height:8px; border-radius:50%; background:#dc2626; display:inline-block;"></span>
+      <h2 style="font-size:14px; font-weight:600; color:#111827;">Reembolsos solicitados</h2>
+    </div>
+    <ul>
+      <% @refund_requests.each do |p| %>
+        <li style="padding:12px 20px; border-bottom:1px solid #f9fafb; display:flex; align-items:center; justify-content:space-between;">
+          <div>
+            <p style="font-size:13px; font-weight:500; color:#111827;"><%= p.user.name %></p>
+            <p style="font-size:12px; color:#6b7280; margin-top:1px;">
+              <%= p.match.home_team %> x <%= p.match.away_team %> —
+              R$ <%= number_with_precision(p.amount, precision: 2, separator: ',', delimiter: '.') %>
+              · Solicitado <%= p.refund_requested_at.strftime("%d/%m %H:%M") %>
+            </p>
+          </div>
+          <%= link_to "Processar →", admin_payment_path(p), style: "font-size:12px; font-weight:600; color:#002776;" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

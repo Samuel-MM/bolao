@@ -1,0 +1,54 @@
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <h1 class="text-2xl font-bold" style="color:#002776;">Jogos — <%= @pool.name %></h1>
+    <%= link_to "← Voltar ao bolão", admin_pool_path(@pool), class: "text-sm text-gray-500 hover:underline" %>
+  </div>
+  <%= link_to "Adicionar jogo", new_admin_pool_match_path(@pool),
+        class: "px-4 py-2 rounded-lg text-sm font-semibold text-white", style: "background-color:#009C3B;" %>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50 border-b">
+      <tr>
+        <th class="px-5 py-3 text-left font-medium text-gray-600">Jogo</th>
+        <th class="px-5 py-3 text-left font-medium text-gray-600">Data/Hora</th>
+        <th class="px-5 py-3 text-left font-medium text-gray-600">Status</th>
+        <th class="px-5 py-3 text-left font-medium text-gray-600">Resultado</th>
+        <th class="px-5 py-3 text-left font-medium text-gray-600">Apostas</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y">
+      <% @matches.each do |m| %>
+        <tr class="hover:bg-gray-50">
+          <td class="px-5 py-3 font-medium text-gray-800"><%= m.home_team %> x <%= m.away_team %></td>
+          <td class="px-5 py-3 text-gray-600"><%= m.kickoff_at.strftime("%d/%m %H:%M") %></td>
+          <td class="px-5 py-3">
+            <span class="px-2 py-0.5 rounded-full text-xs font-medium
+              <%= m.scheduled? ? 'bg-blue-100 text-blue-800' : m.live? ? 'bg-green-100 text-green-800' : m.finished? ? 'bg-gray-100 text-gray-600' : 'bg-red-100 text-red-700' %>">
+              <%= { "scheduled" => "Agendado", "live" => "Ao vivo", "finished" => "Encerrado", "cancelled" => "Cancelado" }[m.status] %>
+            </span>
+          </td>
+          <td class="px-5 py-3 text-gray-600"><%= m.finished? ? "#{m.home_score} x #{m.away_score}" : "—" %></td>
+          <td class="px-5 py-3 text-gray-600"><%= m.bets.count %></td>
+          <td class="px-5 py-3">
+            <div class="flex gap-2">
+              <%= link_to "Editar", edit_admin_pool_match_path(@pool, m), class: "text-gray-500 hover:underline text-xs" %>
+              <% if m.api_football_id.present? %>
+                <%= button_to "Sync", sync_result_admin_pool_match_path(@pool, m), method: :post,
+                      class: "text-blue-600 hover:underline text-xs bg-transparent border-0 p-0 cursor-pointer" %>
+              <% end %>
+              <%= button_to "Excluir", admin_pool_match_path(@pool, m), method: :delete,
+                    class: "text-red-500 hover:underline text-xs bg-transparent border-0 p-0 cursor-pointer",
+                    data: { confirm: "Confirmar exclusão?" } %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if @matches.empty? %>
+    <p class="px-5 py-8 text-center text-gray-400">Nenhum jogo cadastrado.</p>
+  <% end %>
+</div>

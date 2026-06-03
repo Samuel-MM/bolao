@@ -1,0 +1,32 @@
+<p style="font-size:15px; color:#374151; margin:0 0 16px;">Olá, <strong><%= @user.name.split.first %></strong>! 👋</p>
+
+<div style="background:#fefce8; border:2px solid #fde047; border-radius:10px; padding:24px; margin-bottom:24px; text-align:center;">
+  <p style="margin:0 0 8px; font-size:32px;">🏆</p>
+  <p style="margin:0; font-size:20px; font-weight:800; color:#854d0e;">Parabéns, você acertou!</p>
+  <p style="margin:8px 0 0; font-size:14px; color:#92400e;">Seu palpite foi exatamente o placar do jogo!</p>
+</div>
+
+<table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
+  <tr style="background:#f8fafc;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0; width:40%;">Jogo</td>
+    <td style="padding:12px 16px; font-size:13px; font-weight:600; color:#111827; border-bottom:1px solid #e2e8f0;"><%= @match.home_team %> x <%= @match.away_team %></td>
+  </tr>
+  <tr>
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0;">Resultado oficial</td>
+    <td style="padding:12px 16px; font-size:20px; font-weight:800; color:#009C3B; border-bottom:1px solid #e2e8f0;"><%= @match.home_score %> × <%= @match.away_score %></td>
+  </tr>
+  <tr>
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0;">Seu palpite</td>
+    <td style="padding:12px 16px; font-size:20px; font-weight:800; color:#009C3B; border-bottom:1px solid #e2e8f0;"><%= @bet.home_score %> × <%= @bet.away_score %> ✅</td>
+  </tr>
+  <tr style="background:#fefce8;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280;">Seu prêmio</td>
+    <td style="padding:12px 16px; font-size:18px; font-weight:800; color:#854d0e;">R$ <%= number_with_precision(@prize_amount, precision: 2, separator: ',', delimiter: '.') %></td>
+  </tr>
+</table>
+
+<p style="font-size:14px; color:#374151; margin:0 0 16px;">
+  O organizador do bolão entrará em contato para combinar a transferência do prêmio. 🎉
+</p>
+
+<p style="font-size:13px; color:#6b7280; margin:0;">Vai Brasil! 🇧🇷</p>

@@ -1,0 +1,74 @@
+<% content_for :page_title, "Bolões" %>
+
+<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+  <div>
+    <h2 style="font-size:20px; font-weight:700; color:#111827;">Seus bolões</h2>
+    <p style="font-size:13px; color:#6b7280; margin-top:2px;"><%= @pools.count %> bolão(ões) cadastrado(s)</p>
+  </div>
+  <%= link_to "＋ Novo Bolão", new_admin_pool_path,
+        style: "display:inline-flex; align-items:center; gap:6px; padding:9px 18px; border-radius:8px; font-size:13px; font-weight:600; color:#fff; background:#009C3B; text-decoration:none;" %>
+</div>
+
+<div style="background:#fff; border-radius:12px; border:1px solid #e5e7eb; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,.06);">
+  <table style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr style="background:#f9fafb; border-bottom:1px solid #e5e7eb;">
+        <th style="padding:12px 20px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em;">Nome</th>
+        <th style="padding:12px 20px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em;">Status</th>
+        <th style="padding:12px 20px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em;">Aposta mín.</th>
+        <th style="padding:12px 20px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em;">Membros</th>
+        <th style="padding:12px 20px; text-align:left; font-size:11px; font-weight:600; color:#6b7280; text-transform:uppercase; letter-spacing:.05em;">Jogos</th>
+        <th style="padding:12px 20px;"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @pools.each do |pool| %>
+        <tr style="border-bottom:1px solid #f3f4f6;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='#fff'">
+          <td style="padding:14px 20px;">
+            <p style="font-size:14px; font-weight:600; color:#111827;"><%= pool.name %></p>
+            <% if pool.description.present? %>
+              <p style="font-size:12px; color:#9ca3af; margin-top:2px;"><%= truncate(pool.description, length: 50) %></p>
+            <% end %>
+          </td>
+          <td style="padding:14px 20px;">
+            <% if pool.open? %>
+              <span style="display:inline-flex; align-items:center; gap:4px; background:#dcfce7; color:#15803d; font-size:11px; font-weight:600; padding:3px 10px; border-radius:99px;">
+                <span style="width:6px; height:6px; background:#16a34a; border-radius:50%; display:inline-block;"></span> Aberto
+              </span>
+            <% else %>
+              <span style="display:inline-flex; align-items:center; gap:4px; background:#f3f4f6; color:#6b7280; font-size:11px; font-weight:600; padding:3px 10px; border-radius:99px;">
+                Encerrado
+              </span>
+            <% end %>
+          </td>
+          <td style="padding:14px 20px; font-size:14px; font-weight:600; color:#009C3B;">
+            R$ <%= number_with_precision(pool.min_bet_amount, precision: 2, separator: ',', delimiter: '.') %>
+          </td>
+          <td style="padding:14px 20px; font-size:14px; color:#374151;">
+            <strong><%= pool.approved_memberships.count %></strong>
+            <% pending = pool.pool_memberships.pending.count %>
+            <% if pending > 0 %>
+              <span style="font-size:11px; color:#d97706; margin-left:4px;">(+<%= pending %> pendente)</span>
+            <% end %>
+          </td>
+          <td style="padding:14px 20px; font-size:14px; color:#374151;"><%= pool.matches.count %></td>
+          <td style="padding:14px 20px;">
+            <div style="display:flex; gap:12px; justify-content:flex-end;">
+              <%= link_to "Ver", admin_pool_path(pool), style: "font-size:13px; font-weight:500; color:#002776; text-decoration:none;" %>
+              <%= link_to "Editar", edit_admin_pool_path(pool), style: "font-size:13px; font-weight:500; color:#6b7280; text-decoration:none;" %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if @pools.empty? %>
+    <div style="padding:48px; text-align:center;">
+      <p style="font-size:32px; margin-bottom:12px;">⚽</p>
+      <p style="font-size:14px; font-weight:500; color:#374151; margin-bottom:4px;">Nenhum bolão criado ainda</p>
+      <p style="font-size:13px; color:#9ca3af; margin-bottom:16px;">Crie o primeiro bolão para começar</p>
+      <%= link_to "Criar Bolão", new_admin_pool_path,
+            style: "display:inline-block; padding:8px 20px; border-radius:8px; font-size:13px; font-weight:600; color:#fff; background:#009C3B; text-decoration:none;" %>
+    </div>
+  <% end %>
+</div>

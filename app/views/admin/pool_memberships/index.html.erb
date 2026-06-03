@@ -1,0 +1,47 @@
+<div class="mb-6">
+  <h1 class="text-2xl font-bold" style="color:#002776;">Participantes — <%= @pool.name %></h1>
+  <%= link_to "← Voltar ao bolão", admin_pool_path(@pool), class: "text-sm text-gray-500 hover:underline" %>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm border overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-gray-50 border-b">
+      <tr>
+        <th class="px-5 py-3 text-left font-medium text-gray-600">Nome</th>
+        <th class="px-5 py-3 text-left font-medium text-gray-600">E-mail</th>
+        <th class="px-5 py-3 text-left font-medium text-gray-600">Status</th>
+        <th class="px-5 py-3 text-left font-medium text-gray-600">Solicitado em</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody class="divide-y">
+      <% @memberships.each do |m| %>
+        <tr class="hover:bg-gray-50">
+          <td class="px-5 py-3 font-medium text-gray-800"><%= m.user.name %></td>
+          <td class="px-5 py-3 text-gray-600"><%= m.user.email %></td>
+          <td class="px-5 py-3">
+            <span class="px-2 py-0.5 rounded-full text-xs font-medium
+              <%= m.approved? ? 'bg-green-100 text-green-800' : m.pending? ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-700' %>">
+              <%= { "pending" => "Pendente", "approved" => "Aprovado", "rejected" => "Rejeitado" }[m.status] %>
+            </span>
+          </td>
+          <td class="px-5 py-3 text-gray-500 text-xs"><%= m.created_at.strftime("%d/%m/%Y %H:%M") %></td>
+          <td class="px-5 py-3">
+            <% if m.pending? %>
+              <div class="flex gap-2">
+                <%= button_to "Aprovar", approve_admin_pool_pool_membership_path(@pool, m),
+                      method: :patch, class: "text-xs px-3 py-1 rounded text-white font-medium",
+                      style: "background-color:#009C3B;" %>
+                <%= button_to "Rejeitar", reject_admin_pool_pool_membership_path(@pool, m),
+                      method: :patch, class: "text-xs px-3 py-1 rounded bg-red-600 text-white font-medium" %>
+              </div>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% if @memberships.empty? %>
+    <p class="px-5 py-8 text-center text-gray-400">Nenhuma solicitação ainda.</p>
+  <% end %>
+</div>

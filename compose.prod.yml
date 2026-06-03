@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bolao
+      POSTGRES_PASSWORD: bolao
+      POSTGRES_DB: bolao_da_copa_production
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bolao"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    image: ${DOCKERHUB_USERNAME}/bolao:latest
+    restart: unless-stopped
+    env_file: /srv/bolao/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "true"
+    expose:
+      - "80"
+
+  worker:
+    image: ${DOCKERHUB_USERNAME}/bolao:latest
+    restart: unless-stopped
+    command: bundle exec good_job start
+    env_file: /srv/bolao/.env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "true"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /srv/bolao/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /srv/bolao/certs:/etc/nginx/certs:ro
+    depends_on:
+      - web

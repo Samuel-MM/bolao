@@ -1,0 +1,78 @@
+<div class="mb-6">
+  <h1 class="text-2xl font-bold" style="color:#002776;"><%= @match.home_team %> x <%= @match.away_team %></h1>
+  <p class="text-gray-500 text-sm mt-1"><%= @match.kickoff_at.strftime("%d/%m/%Y às %H:%M") %> — <%= @pool.name %></p>
+  <%= link_to "← Voltar ao bolão", pool_path(@pool), class: "text-sm text-gray-500 hover:underline" %>
+</div>
+
+<% if @match.finished? %>
+  <div class="bg-white rounded-xl border shadow-sm p-6 mb-6 text-center">
+    <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Resultado Final</p>
+    <p class="text-5xl font-extrabold" style="color:#002776;"><%= @match.home_score %> × <%= @match.away_score %></p>
+    <% prize = @match.total_prize %>
+    <% if prize > 0 %>
+      <p class="text-sm text-gray-500 mt-3">
+        Prêmio total: <strong class="text-green-700">R$ <%= number_with_precision(prize, precision: 2, separator: ',', delimiter: '.') %></strong>
+        — <%= @match.winning_bets.count %> vencedor(es)
+      </p>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="bg-white rounded-xl border shadow-sm mb-6">
+  <div class="px-5 py-4 border-b flex items-center justify-between">
+    <h2 class="font-semibold text-gray-800">Seus palpites</h2>
+    <% if @bets_open %>
+      <%= link_to "Novo palpite", new_pool_match_bet_path(@pool, @match),
+            class: "text-xs px-3 py-1.5 rounded-lg font-semibold text-white", style: "background-color:#009C3B;" %>
+    <% end %>
+  </div>
+  <% if @user_bets.any? %>
+    <ul class="divide-y">
+      <% @user_bets.each do |bet| %>
+        <li class="px-5 py-3 flex items-center justify-between">
+          <span class="font-semibold text-gray-800"><%= bet.home_score %> × <%= bet.away_score %></span>
+          <% if @match.finished? %>
+            <span class="text-sm <%= bet.home_score == @match.home_score && bet.away_score == @match.away_score ? 'text-green-600 font-bold' : 'text-red-500' %>">
+              <%= bet.home_score == @match.home_score && bet.away_score == @match.away_score ? "✅ Acertou!" : "❌" %>
+            </span>
+          <% elsif bet.payment %>
+            <span class="text-xs px-2 py-0.5 rounded-full font-medium <%= bet.payment.confirmed? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+              <%= bet.payment.confirmed? ? "Pago" : "Aguardando" %>
+            </span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="px-5 py-6 text-sm text-gray-400">
+      <%= @bets_open ? "Você ainda não apostou neste jogo." : "Você não apostou neste jogo." %>
+    </p>
+  <% end %>
+</div>
+
+<% if @match.finished? && @all_bets.any? %>
+  <div class="bg-white rounded-xl border shadow-sm">
+    <div class="px-5 py-4 border-b">
+      <h2 class="font-semibold text-gray-800">Todos os palpites</h2>
+    </div>
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b">
+        <tr>
+          <th class="px-5 py-3 text-left font-medium text-gray-600">Participante</th>
+          <th class="px-5 py-3 text-left font-medium text-gray-600">Palpite</th>
+          <th class="px-5 py-3 text-left font-medium text-gray-600"></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y">
+        <% @all_bets.each do |bet| %>
+          <% is_winner = @winning_bets.include?(bet) %>
+          <tr class="<%= is_winner ? 'bg-green-50' : 'hover:bg-gray-50' %>">
+            <td class="px-5 py-3 font-medium text-gray-800"><%= bet.user.name %></td>
+            <td class="px-5 py-3 font-semibold text-gray-700"><%= bet.home_score %> × <%= bet.away_score %></td>
+            <td class="px-5 py-3"><%= "🏆" if is_winner %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

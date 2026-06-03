@@ -11,6 +11,8 @@ gem "jbuilder"
 
 # Auth
 gem "devise"
+gem "devise-i18n"
+gem "rails-i18n", "~> 8.0"
 
 # Background jobs com PostgreSQL (sem Redis)
 gem "good_job", "~> 4.0"
@@ -35,6 +37,7 @@ gem "bootsnap", require: false
 gem "thruster", require: false
 
 group :development, :test do
+  gem "dotenv-rails"
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "bundler-audit", require: false
   gem "brakeman", require: false

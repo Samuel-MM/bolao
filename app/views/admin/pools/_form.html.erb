@@ -1,0 +1,36 @@
+<%
+  input_style = "width:100%; border:1px solid #d1d5db; border-radius:8px; padding:9px 12px; font-size:14px; outline:none; box-sizing:border-box; font-family:inherit;"
+  label_style = "display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:6px;"
+  btn_style   = "padding:9px 20px; border-radius:8px; font-size:13px; font-weight:600; color:#fff; border:none; cursor:pointer; background:#009C3B;"
+%>
+<%= form_with model: [:admin, pool] do |f| %>
+  <% if pool.errors.any? %>
+    <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:12px 16px; margin-bottom:16px;">
+      <ul style="margin:0; padding-left:16px; font-size:13px; color:#dc2626;">
+        <% pool.errors.full_messages.each do |msg| %><li><%= msg %></li><% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="margin-bottom:16px;">
+    <%= f.label :name, "Nome do bolão", style: label_style %>
+    <%= f.text_field :name, style: input_style, placeholder: "Ex: Bolão da Galera" %>
+  </div>
+  <div style="margin-bottom:16px;">
+    <%= f.label :description, "Descrição (opcional)", style: label_style %>
+    <%= f.text_area :description, rows: 3, style: input_style, placeholder: "Regras, informações importantes..." %>
+  </div>
+  <div style="margin-bottom:16px;">
+    <%= f.label :min_bet_amount, "Valor mínimo da aposta (R$)", style: label_style %>
+    <%= f.number_field :min_bet_amount, step: "0.01", min: 0, style: input_style, placeholder: "20.00" %>
+  </div>
+  <div style="margin-bottom:24px;">
+    <%= f.label :status, "Status", style: label_style %>
+    <%= f.select :status, [["Aberto", "open"], ["Encerrado", "finished"]],
+          {}, style: "#{input_style} background:#fff;" %>
+  </div>
+  <div style="display:flex; gap:12px; align-items:center;">
+    <%= f.submit pool.persisted? ? "Salvar alterações" : "Criar Bolão", style: btn_style %>
+    <%= link_to "Cancelar", admin_pools_path, style: "font-size:13px; color:#6b7280; text-decoration:none;" %>
+  </div>
+<% end %>

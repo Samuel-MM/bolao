@@ -1,0 +1,49 @@
+pt-BR:
+  activerecord:
+    models:
+      user: "usuário"
+      pool: "bolão"
+      pool_membership: "participação"
+      match: "jogo"
+      bet: "aposta"
+      payment: "pagamento"
+    attributes:
+      user:
+        name: "Nome"
+        email: "E-mail"
+        password: "Senha"
+        password_confirmation: "Confirmação de senha"
+      pool:
+        name: "Nome"
+        min_bet_amount: "Valor mínimo da aposta"
+        status: "Status"
+      match:
+        home_team: "Time da casa"
+        away_team: "Time visitante"
+        kickoff_at: "Data e hora do jogo"
+      bet:
+        home_score: "Gols do time da casa"
+        away_score: "Gols do time visitante"
+      payment:
+        amount: "Valor"
+    errors:
+      models:
+        bet:
+          attributes:
+            base:
+              bets_closed: "As apostas para este jogo já estão encerradas."
+              not_a_member: "Você não é membro aprovado deste bolão."
+              duplicate_scoreline: "Você já apostou neste placar para este jogo."
+        pool_membership:
+          attributes:
+            user_id:
+              already_member: "Você já solicitou participação neste bolão."
+        match:
+          attributes:
+            base:
+              scores_required_when_finished: "É necessário informar o placar quando o status é Encerrado."
+  errors:
+    messages:
+      not_saved:
+        one: "Não foi possível salvar o %{resource}: 1 erro."
+        other: "Não foi possível salvar o %{resource}: %{count} erros."

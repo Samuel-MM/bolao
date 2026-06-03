@@ -1,0 +1,37 @@
+<p style="font-size:15px; color:#374151; margin:0 0 16px;">Olá, <strong><%= @admin.name.split.first %></strong>! 👋</p>
+
+<div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:10px; padding:20px; margin-bottom:24px;">
+  <p style="margin:0; font-size:16px; font-weight:700; color:#c2410c;">⚠️ Nenhum participante acertou</p>
+  <p style="margin:8px 0 0; font-size:14px; color:#9a3412;">
+    Nenhum palpite coincidiu com o placar do jogo abaixo.
+  </p>
+</div>
+
+<table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
+  <tr style="background:#f8fafc;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0; width:40%;">Jogo</td>
+    <td style="padding:12px 16px; font-size:13px; font-weight:600; color:#111827; border-bottom:1px solid #e2e8f0;"><%= @match.home_team %> x <%= @match.away_team %></td>
+  </tr>
+  <tr>
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0;">Resultado</td>
+    <td style="padding:12px 16px; font-size:20px; font-weight:800; color:#009C3B; border-bottom:1px solid #e2e8f0;"><%= @match.home_score %> × <%= @match.away_score %></td>
+  </tr>
+  <tr style="background:#fff7ed;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280;">Prêmio acumulado</td>
+    <td style="padding:12px 16px; font-size:15px; font-weight:700; color:#c2410c;">R$ <%= number_with_precision(@total_prize, precision: 2, separator: ',', delimiter: '.') %></td>
+  </tr>
+</table>
+
+<p style="font-size:14px; color:#374151; margin:0 0 24px;">
+  Você precisa decidir o que fazer com o valor: reembolsar os participantes ou acumulá-lo para o próximo jogo.
+</p>
+
+<table cellpadding="0" cellspacing="0" style="margin:0 auto 24px;">
+  <tr>
+    <td style="background:#002776; border-radius:8px; padding:12px 28px;">
+      <a href="<%= admin_payments_url %>" style="color:#ffffff; font-size:14px; font-weight:700; text-decoration:none;">
+        Ver pagamentos →
+      </a>
+    </td>
+  </tr>
+</table>

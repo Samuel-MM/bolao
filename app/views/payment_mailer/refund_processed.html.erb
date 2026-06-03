@@ -1,0 +1,25 @@
+<p style="font-size:15px; color:#374151; margin:0 0 16px;">Olá, <strong><%= @user.name.split.first %></strong>! 👋</p>
+
+<div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:20px; margin-bottom:24px;">
+  <p style="margin:0; font-size:16px; font-weight:700; color:#15803d;">✅ Reembolso processado</p>
+  <p style="margin:8px 0 0; font-size:14px; color:#166534;">Seu reembolso foi aprovado e será devolvido em breve.</p>
+</div>
+
+<table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
+  <tr style="background:#f8fafc;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0; width:40%;">Jogo</td>
+    <td style="padding:12px 16px; font-size:13px; font-weight:600; color:#111827; border-bottom:1px solid #e2e8f0;"><%= @match.home_team %> x <%= @match.away_team %></td>
+  </tr>
+  <tr style="background:#f0fdf4;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280;">Valor reembolsado</td>
+    <td style="padding:12px 16px; font-size:15px; font-weight:700; color:#15803d;">R$ <%= number_with_precision(@payment.amount, precision: 2, separator: ',', delimiter: '.') %></td>
+  </tr>
+  <tr>
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280;">Processado em</td>
+    <td style="padding:12px 16px; font-size:13px; color:#374151;"><%= @payment.refund_processed_at.strftime("%d/%m/%Y às %H:%M") %></td>
+  </tr>
+</table>
+
+<p style="font-size:14px; color:#374151; margin:0;">
+  Qualquer dúvida, entre em contato com o organizador do bolão.
+</p>

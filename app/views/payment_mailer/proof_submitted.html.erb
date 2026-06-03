@@ -1,0 +1,41 @@
+<p style="font-size:15px; color:#374151; margin:0 0 16px;">Olá, <strong><%= @admin.name.split.first %></strong>! 👋</p>
+
+<div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:20px; margin-bottom:24px;">
+  <p style="margin:0; font-size:16px; font-weight:700; color:#1d4ed8;">📎 Novo comprovante para revisar</p>
+  <p style="margin:8px 0 0; font-size:14px; color:#1e40af;">
+    <strong><%= @user.name %></strong> enviou um comprovante de pagamento e aguarda sua confirmação.
+  </p>
+</div>
+
+<table style="width:100%; border-collapse:collapse; margin-bottom:24px;">
+  <tr style="background:#f8fafc;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0; width:40%;">Participante</td>
+    <td style="padding:12px 16px; font-size:13px; font-weight:600; color:#111827; border-bottom:1px solid #e2e8f0;"><%= @user.name %></td>
+  </tr>
+  <tr>
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0;">Jogo</td>
+    <td style="padding:12px 16px; font-size:13px; font-weight:600; color:#111827; border-bottom:1px solid #e2e8f0;"><%= @match.home_team %> x <%= @match.away_team %></td>
+  </tr>
+  <tr>
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280; border-bottom:1px solid #e2e8f0;">Palpite</td>
+    <td style="padding:12px 16px; font-size:18px; font-weight:800; color:#002776; border-bottom:1px solid #e2e8f0;"><%= @bet.home_score %> × <%= @bet.away_score %></td>
+  </tr>
+  <tr style="background:#f0fdf4;">
+    <td style="padding:12px 16px; font-size:13px; color:#6b7280;">Valor</td>
+    <td style="padding:12px 16px; font-size:15px; font-weight:700; color:#15803d;">R$ <%= number_with_precision(@payment.amount, precision: 2, separator: ',', delimiter: '.') %></td>
+  </tr>
+</table>
+
+<table cellpadding="0" cellspacing="0" style="margin:0 auto 12px;">
+  <tr>
+    <td style="background:#009C3B; border-radius:8px; padding:12px 28px; margin-right:8px;">
+      <a href="<%= view_proof_admin_payment_url(@payment) %>" style="color:#ffffff; font-size:14px; font-weight:700; text-decoration:none;">
+        Ver comprovante →
+      </a>
+    </td>
+  </tr>
+</table>
+
+<p style="text-align:center; margin:0;">
+  <a href="<%= admin_payment_url(@payment) %>" style="font-size:13px; color:#6b7280;">Ir para a tela de aprovação</a>
+</p>

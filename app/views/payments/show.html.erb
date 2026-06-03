@@ -1,0 +1,96 @@
+<div class="mb-6">
+  <h1 class="text-2xl font-bold" style="color:#002776;">Pagamento da Aposta</h1>
+  <p class="text-gray-500 text-sm mt-1">
+    <%= @match.home_team %> x <%= @match.away_team %> — Palpite: <%= @bet.home_score %> × <%= @bet.away_score %>
+  </p>
+</div>
+
+<% if @payment.pending? || @payment.submitted? %>
+  <div class="grid gap-6 lg:grid-cols-2">
+    <div class="bg-white rounded-xl border shadow-sm p-6">
+      <h2 class="font-semibold text-gray-800 mb-1">Pague via PIX</h2>
+      <p class="text-sm text-gray-500 mb-4">
+        Valor: <strong class="text-green-700 text-lg">R$ <%= number_with_precision(@payment.amount, precision: 2, separator: ',', delimiter: '.') %></strong>
+      </p>
+      <% if @payment.qr_code_svg.present? %>
+        <div class="flex justify-center mb-4"><%= @payment.qr_code_svg.html_safe %></div>
+      <% end %>
+      <% if @payment.pix_code.present? %>
+        <div class="bg-gray-50 rounded-lg p-3 mb-4">
+          <p class="text-xs text-gray-500 mb-1">Copia e cola:</p>
+          <code class="text-xs break-all text-gray-700"><%= @payment.pix_code %></code>
+          <button onclick="navigator.clipboard.writeText('<%= @payment.pix_code %>')"
+                  class="mt-2 w-full text-xs py-1.5 rounded border border-gray-300 text-gray-600 hover:bg-gray-100">
+            Copiar código
+          </button>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="bg-white rounded-xl border shadow-sm p-6" data-controller="upload">
+      <h2 class="font-semibold text-gray-800 mb-4">Enviar comprovante</h2>
+      <% if @payment.submitted? %>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 text-sm text-blue-700">
+          ✓ Comprovante enviado. Aguardando confirmação do administrador.
+        </div>
+        <% if @payment.proof_url.present? %>
+          <%= link_to "Ver comprovante enviado →", view_proof_payment_path(@payment), target: "_blank",
+                style: "font-size:13px; color:#002776; font-weight:500;" %>
+        <% end %>
+      <% else %>
+        <p class="text-sm text-gray-500 mb-4">Após realizar o pagamento, envie o comprovante para confirmar sua aposta.</p>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Arquivo (imagem ou PDF)</label>
+            <input type="file" accept="image/*,.pdf"
+                   data-upload-target="file"
+                   data-action="change->upload#handleFile"
+                   class="w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-600 file:text-white cursor-pointer">
+          </div>
+          <div data-upload-target="progress" class="hidden">
+            <div class="bg-gray-200 rounded-full h-2">
+              <div class="bg-green-500 h-2 rounded-full transition-all duration-300" style="width:0%"
+                   data-upload-target="bar"></div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1" data-upload-target="status">Enviando...</p>
+          </div>
+          <%= form_with url: submit_proof_payment_path(@payment), method: :post, id: "proof-form" do |f| %>
+            <input type="hidden" name="proof_url" data-upload-target="url">
+            <%= f.submit "Confirmar envio do comprovante",
+                  data: { "upload-target": "button" },
+                  disabled: true,
+                  class: "w-full py-2.5 rounded-lg text-sm font-semibold text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed",
+                  style: "background-color:#009C3B;" %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if !@payment.confirmed? && @match.kickoff_at > Time.current %>
+        <div class="mt-6 pt-6 border-t">
+          <p class="text-xs text-gray-400 mb-2">Deseja cancelar esta aposta?</p>
+          <%= button_to "Solicitar reembolso", request_refund_payment_path(@payment), method: :post,
+                class: "text-xs text-red-600 hover:underline bg-transparent border-0 p-0 cursor-pointer",
+                data: { confirm: "Solicitar reembolso desta aposta?" } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+<% else %>
+  <div class="bg-white rounded-xl border shadow-sm p-8 text-center max-w-md mx-auto">
+    <% if @payment.confirmed? %>
+      <div class="text-5xl mb-4">✅</div>
+      <h2 class="text-xl font-bold text-green-700 mb-2">Pagamento confirmado!</h2>
+      <p class="text-sm text-gray-500">Sua aposta está oficialmente registrada. Boa sorte!</p>
+    <% elsif @payment.refunded? %>
+      <div class="text-5xl mb-4">↩️</div>
+      <h2 class="text-xl font-bold text-gray-700 mb-2">Reembolso processado</h2>
+      <p class="text-sm text-gray-500">Processado em <%= @payment.refund_processed_at.strftime("%d/%m/%Y") %>.</p>
+    <% elsif @payment.rejected? %>
+      <div class="text-5xl mb-4">❌</div>
+      <h2 class="text-xl font-bold text-red-600 mb-2">Pagamento rejeitado</h2>
+      <p class="text-sm text-gray-500">Entre em contato com o organizador do bolão.</p>
+    <% end %>
+    <%= link_to "← Minhas apostas", bets_path, class: "mt-6 inline-block text-sm text-gray-500 hover:underline" %>
+  </div>
+<% end %>

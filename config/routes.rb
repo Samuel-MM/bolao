@@ -1,14 +1,54 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  devise_for :users, controllers: { registrations: "users/registrations" }
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
+  # Admin
+  namespace :admin do
+    get "/", to: "dashboard#index", as: :dashboard
+    resources :pools do
+      resources :pool_memberships, only: [:index] do
+        member do
+          patch :approve
+          patch :reject
+        end
+      end
+      resources :matches, only: [:index, :new, :create, :edit, :update, :destroy] do
+        member do
+          post :sync_result
+        end
+      end
+    end
+    resources :payments, only: [:index, :show] do
+      member do
+        patch :confirm
+        patch :reject
+        patch :process_refund
+        get   :view_proof
+      end
+    end
+  end
+
+  # Invite flow
+  get  "join/:invite_token", to: "pools#invite",  as: :pool_invite
+  post "join/:invite_token", to: "pool_memberships#create", as: :pool_join
+
+  # Participant
+  resources :pools, only: [:show] do
+    resources :matches, only: [:show] do
+      resources :bets, only: [:new, :create]
+    end
+  end
+  resources :bets, only: [:index, :show]
+  resources :payments, only: [:show] do
+    collection do
+      post :presigned_url
+    end
+    member do
+      post :submit_proof
+      post :request_refund
+      get  :view_proof
+    end
+  end
+
   get "up" => "rails/health#show", as: :rails_health_check
-
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
-  # Defines the root path route ("/")
-  # root "posts#index"
+  root to: "home#index"
 end

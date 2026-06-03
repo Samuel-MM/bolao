@@ -1,3 +1,20 @@
-<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="256" cy="256" r="256" fill="red"/>
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background circle: Brazil green -->
+  <circle cx="256" cy="256" r="256" fill="#009C3B"/>
+  <!-- Soccer ball: white circle -->
+  <circle cx="256" cy="256" r="180" fill="#ffffff"/>
+  <!-- Center pentagon (black) -->
+  <polygon points="256,150 318,197 295,272 217,272 194,197" fill="#111111"/>
+  <!-- Top-left pentagon -->
+  <polygon points="194,197 130,197 110,135 175,95 232,128" fill="#111111"/>
+  <!-- Top-right pentagon -->
+  <polygon points="318,197 382,197 402,135 337,95 280,128" fill="#111111"/>
+  <!-- Bottom-left pentagon -->
+  <polygon points="217,272 175,330 205,400 280,400 295,320" fill="#111111"/>
+  <!-- Bottom-right pentagon -->
+  <polygon points="295,272 337,330 307,400 232,400 217,320" fill="#111111"/>
+  <!-- Bottom pentagon -->
+  <polygon points="295,320 337,330 370,380 256,420 142,380 175,330 217,320" fill="#111111"/>
+  <!-- Shine -->
+  <ellipse cx="200" cy="190" rx="55" ry="32" fill="#ffffff" opacity="0.25" transform="rotate(-30 200 190)"/>
 </svg>

@@ -1,0 +1,57 @@
+<div class="mb-6">
+  <h1 class="text-2xl font-bold" style="color:#002776;">Detalhes da Aposta</h1>
+  <%= link_to "← Minhas apostas", bets_path, class: "text-sm text-gray-500 hover:underline" %>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-2">
+  <div class="bg-white rounded-xl border shadow-sm p-6">
+    <h2 class="font-semibold text-gray-800 mb-4">Sua aposta</h2>
+    <div class="text-center py-6 bg-gray-50 rounded-xl mb-4">
+      <p class="text-xs text-gray-500 mb-2 uppercase tracking-wide">Seu palpite</p>
+      <div class="flex items-center justify-center gap-4">
+        <div class="text-center">
+          <p class="text-xs text-gray-500 font-medium mb-1"><%= @match.home_team %></p>
+          <p class="text-4xl font-extrabold" style="color:#002776;"><%= @bet.home_score %></p>
+        </div>
+        <span class="text-2xl font-bold text-gray-300">×</span>
+        <div class="text-center">
+          <p class="text-xs text-gray-500 font-medium mb-1"><%= @match.away_team %></p>
+          <p class="text-4xl font-extrabold" style="color:#002776;"><%= @bet.away_score %></p>
+        </div>
+      </div>
+    </div>
+    <% if @match.finished? %>
+      <div class="text-center py-4 rounded-xl <%= @bet.home_score == @match.home_score && @bet.away_score == @match.away_score ? 'bg-green-50' : 'bg-red-50' %>">
+        <p class="text-xs text-gray-500 mb-1 uppercase tracking-wide">Resultado oficial</p>
+        <p class="text-2xl font-bold <%= @bet.home_score == @match.home_score && @bet.away_score == @match.away_score ? 'text-green-700' : 'text-red-600' %>">
+          <%= @match.home_score %> × <%= @match.away_score %>
+          <%= @bet.home_score == @match.home_score && @bet.away_score == @match.away_score ? "🏆 Acertou!" : "Não acertou" %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-xl border shadow-sm p-6">
+    <h2 class="font-semibold text-gray-800 mb-4">Pagamento</h2>
+    <% if @payment %>
+      <dl class="space-y-3 text-sm mb-6">
+        <div class="flex justify-between">
+          <dt class="text-gray-500">Valor</dt>
+          <dd class="font-bold" style="color:#009C3B;">R$ <%= number_with_precision(@payment.amount, precision: 2, separator: ',', delimiter: '.') %></dd>
+        </div>
+        <div class="flex justify-between">
+          <dt class="text-gray-500">Status</dt>
+          <dd>
+            <span class="px-2 py-0.5 rounded-full text-xs font-medium
+              <%= @payment.confirmed? ? 'bg-green-100 text-green-800' : @payment.submitted? ? 'bg-blue-100 text-blue-800' : @payment.pending? ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-600' %>">
+              <%= { "pending" => "Aguardando PIX", "submitted" => "Comprovante enviado", "confirmed" => "Confirmado", "rejected" => "Rejeitado", "refunded" => "Reembolsado" }[@payment.status] %>
+            </span>
+          </dd>
+        </div>
+      </dl>
+      <%= link_to "Ir para o pagamento →", payment_path(@payment),
+            class: "block text-center w-full py-2.5 rounded-lg text-sm font-semibold text-white",
+            style: "background-color:#009C3B;" %>
+    <% end %>
+  </div>
+</div>

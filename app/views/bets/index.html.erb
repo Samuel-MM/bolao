@@ -1,0 +1,69 @@
+<div class="mb-6">
+  <h1 class="text-2xl font-bold" style="color:#002776;">Minhas Apostas</h1>
+</div>
+
+<div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+  <% if @bets.any? %>
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 border-b">
+        <tr>
+          <th class="px-5 py-3 text-left font-medium text-gray-600">Jogo</th>
+          <th class="px-5 py-3 text-left font-medium text-gray-600">Palpite</th>
+          <th class="px-5 py-3 text-left font-medium text-gray-600">Resultado</th>
+          <th class="px-5 py-3 text-left font-medium text-gray-600">Pagamento</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody class="divide-y">
+        <% @bets.each do |bet| %>
+          <% match = bet.match %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-5 py-3">
+              <p class="font-medium text-gray-800"><%= match.home_team %> x <%= match.away_team %></p>
+              <p class="text-xs text-gray-400"><%= match.pool.name %></p>
+            </td>
+            <td class="px-5 py-3 font-semibold text-gray-700"><%= bet.home_score %> x <%= bet.away_score %></td>
+            <td class="px-5 py-3 text-gray-600">
+              <% if match.finished? %>
+                <span class="<%= bet.home_score == match.home_score && bet.away_score == match.away_score ? 'text-green-600 font-bold' : 'text-red-500' %>">
+                  <%= match.home_score %> x <%= match.away_score %>
+                  <%= bet.home_score == match.home_score && bet.away_score == match.away_score ? "✅" : "❌" %>
+                </span>
+              <% else %>
+                <span class="text-gray-400">—</span>
+              <% end %>
+            </td>
+            <td class="px-5 py-3">
+              <% p = bet.payment %>
+              <% if p %>
+                <% label, bg, color =
+                  if p.refund_requested?
+                    ["⏳ Aguardando reembolso", "#fef3c7", "#92400e"]
+                  else
+                    { "pending"   => ["Aguardando PIX",       "#fef3c7", "#92400e"],
+                      "submitted" => ["Comprovante enviado",   "#dbeafe", "#1d4ed8"],
+                      "confirmed" => ["Confirmado ✓",          "#dcfce7", "#15803d"],
+                      "rejected"  => ["Rejeitado",             "#fee2e2", "#dc2626"],
+                      "refunded"  => ["Reembolsado",           "#f3f4f6", "#6b7280"] }[p.status]
+                  end
+                %>
+                <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:99px; background:<%= bg %>; color:<%= color %>;"><%= label %></span>
+              <% end %>
+            </td>
+            <td class="px-5 py-3">
+              <% if bet.payment&.refund_requested? %>
+                <%# Sem link — reembolso em andamento %>
+              <% elsif bet.payment && (bet.payment.pending? || bet.payment.submitted?) %>
+                <%= link_to "Pagar →", payment_path(bet.payment), style: "font-size:12px; font-weight:600; color:#009C3B; text-decoration:none;" %>
+              <% else %>
+                <%= link_to "Ver", bet_path(bet), style: "font-size:12px; color:#6b7280; text-decoration:none;" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="px-5 py-8 text-center text-gray-400">Você ainda não fez nenhuma aposta.</p>
+  <% end %>
+</div>
