@@ -30,7 +30,7 @@ gem "rqrcode"
 gem "aws-sdk-s3", require: false
 
 # Variantes de imagem no Active Storage
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.0"
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
