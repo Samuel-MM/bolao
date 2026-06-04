@@ -12,6 +12,16 @@
 
   <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
     <div class="bg-white py-8 px-6 shadow rounded-xl sm:px-10">
+      <% if session[:invite_pool_name].present? %>
+        <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:14px 16px; margin-bottom:20px;">
+          <p class="text-sm font-semibold" style="color:#1d4ed8; margin-bottom:4px;">Você foi convidado!</p>
+          <p class="text-sm text-gray-600">
+            Entre na sua conta para participar do bolão <strong><%= session[:invite_pool_name] %></strong>.
+            Não tem conta? <%= link_to "Crie uma gratuitamente", new_user_registration_path, style: "color:#1d4ed8; text-decoration:underline;" %>.
+          </p>
+        </div>
+      <% end %>
+
       <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
         <div class="space-y-5">
           <div>
