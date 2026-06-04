@@ -43,6 +43,16 @@
                 class: "mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2" %>
           </div>
 
+          <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:16px;">
+            <div class="flex items-center justify-between mb-1">
+              <%= f.label :pix_key, "Chave PIX para receber prêmio", class: "block text-sm font-medium text-gray-700" %>
+              <span class="text-xs text-gray-400 ml-2 flex-shrink-0">Opcional</span>
+            </div>
+            <p class="text-xs text-gray-500 mb-2">CPF, telefone, e-mail ou chave aleatória. Usada para transferir o prêmio caso você vença.</p>
+            <%= f.text_field :pix_key, placeholder: "Ex: 11999999999",
+                class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2" %>
+          </div>
+
           <%= f.submit "Criar conta",
               class: "w-full flex justify-center py-2.5 px-4 rounded-lg text-sm font-semibold text-white cursor-pointer transition-opacity hover:opacity-90",
               style: "background-color:#009C3B;" %>

@@ -11,6 +11,7 @@ class PoolMembershipsController < ApplicationController
     end
 
     if membership.save
+      User.admin.find_each { |admin| ParticipantMailer.membership_requested(membership, admin).deliver_later }
       redirect_to root_path,
                   notice: "Solicitação enviada! Aguarde a aprovação do administrador."
     else
