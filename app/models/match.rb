@@ -16,7 +16,7 @@ class Match < ApplicationRecord
   end
 
   def total_prize
-    bets.joins(:payment).where(payments: { status: "confirmed" }).sum("payments.amount")
+    bets.joins(:payment).where(payments: { status: "confirmed" }).sum("payments.amount") + bonus_prize
   end
 
   def winning_bets
