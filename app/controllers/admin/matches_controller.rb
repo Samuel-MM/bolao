@@ -7,6 +7,20 @@ module Admin
       @matches = @pool.matches.order(:kickoff_at)
     end
 
+    def lookup
+      id = params[:id].to_i
+      return render json: { error: "ID inválido" }, status: :bad_request unless id > 0
+
+      data = FootballDataService.new.match(id)
+      return render json: { error: "Jogo não encontrado na API" }, status: :not_found unless data
+
+      render json: {
+        home_team:  data.dig("homeTeam", "name"),
+        away_team:  data.dig("awayTeam", "name"),
+        kickoff_at: data["utcDate"]
+      }
+    end
+
     def new
       @match = @pool.matches.build
     end

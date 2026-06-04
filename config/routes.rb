@@ -12,6 +12,9 @@ Rails.application.routes.draw do
         end
       end
       resources :matches, only: [:index, :new, :create, :edit, :update, :destroy] do
+        collection do
+          get :lookup
+        end
         member do
           post :sync_result
           get  :bets

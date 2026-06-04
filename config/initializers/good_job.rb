@@ -11,9 +11,9 @@ Rails.application.configure do
 
   config.good_job.cron = {
     sync_match_results: {
-      cron: "*/30 * * * *",
+      cron: "*/10 * * * *",
       class: "SyncAllMatchResultsJob",
-      description: "Sincroniza resultados dos jogos com a API Football a cada 30 minutos"
+      description: "Sincroniza resultados dos jogos a cada 10 minutos"
     }
   }
 end

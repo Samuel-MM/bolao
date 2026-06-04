@@ -2,7 +2,8 @@
   input_style = "width:100%; border:1px solid #d1d5db; border-radius:8px; padding:9px 12px; font-size:14px; outline:none; box-sizing:border-box; font-family:inherit;"
   label_style = "display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:6px;"
 %>
-<%= form_with model: [:admin, @pool, match] do |f| %>
+<%= form_with model: [:admin, @pool, match],
+      data: { controller: "match-lookup", "match-lookup-url-value": lookup_admin_pool_matches_path(@pool) } do |f| %>
   <% if match.errors.any? %>
     <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:8px; padding:12px 16px; margin-bottom:16px;">
       <ul style="margin:0; padding-left:16px; font-size:13px; color:#dc2626;">
@@ -11,14 +12,39 @@
     </div>
   <% end %>
 
+  <%# --- Auto-fill via football-data.org --- %>
+  <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; padding:16px; margin-bottom:20px;">
+    <p style="font-size:12px; font-weight:600; color:#1d4ed8; margin-bottom:10px;">
+      Preencher automaticamente via API
+    </p>
+    <div style="display:flex; gap:10px; align-items:flex-end;">
+      <div style="flex:1;">
+        <%= f.label :api_football_id, "ID do jogo (football-data.org)", style: label_style %>
+        <%= f.number_field :api_football_id,
+              style: input_style,
+              placeholder: "ex: 508276",
+              data: { "match-lookup-target": "matchId" } %>
+      </div>
+      <button type="button"
+              data-action="click->match-lookup#lookup"
+              data-match-lookup-target="button"
+              style="padding:9px 16px; border-radius:8px; font-size:13px; font-weight:600; color:#1d4ed8; border:1px solid #bfdbfe; background:#dbeafe; white-space:nowrap; flex-shrink:0;">
+        Buscar da API
+      </button>
+    </div>
+    <p style="font-size:12px; margin-top:6px;" data-match-lookup-target="feedback"></p>
+  </div>
+
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
     <div>
       <%= f.label :home_team, "Time da casa", style: label_style %>
-      <%= f.text_field :home_team, placeholder: "Brasil", style: input_style %>
+      <%= f.text_field :home_team, placeholder: "Brasil", style: input_style,
+            data: { "match-lookup-target": "homeTeam" } %>
     </div>
     <div>
       <%= f.label :away_team, "Time visitante", style: label_style %>
-      <%= f.text_field :away_team, placeholder: "Argentina", style: input_style %>
+      <%= f.text_field :away_team, placeholder: "Argentina", style: input_style,
+            data: { "match-lookup-target": "awayTeam" } %>
     </div>
   </div>
 
@@ -26,12 +52,8 @@
     <%= f.label :kickoff_at, "Data e hora do jogo", style: label_style %>
     <%= f.datetime_local_field :kickoff_at,
           value: match.kickoff_at&.strftime("%Y-%m-%dT%H:%M"),
-          style: input_style %>
-  </div>
-
-  <div style="margin-bottom:16px;">
-    <%= f.label :api_football_id, "ID no API-Football (opcional)", style: label_style %>
-    <%= f.number_field :api_football_id, style: input_style, placeholder: "ex: 867891" %>
+          style: input_style,
+          data: { "match-lookup-target": "kickoffAt" } %>
   </div>
 
   <div style="margin-bottom:16px;">
