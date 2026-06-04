@@ -1,5 +1,5 @@
 class FootballDataService
-  BASE_URL = "https://api.football-data.org/v4"
+  BASE_URL = "https://api.football-data.org/v4/"
 
   def initialize
     @conn = Faraday.new(BASE_URL) do |f|
@@ -11,7 +11,7 @@ class FootballDataService
 
   # Returns the raw match object or nil
   def match(id)
-    response = @conn.get("/matches/#{id}")
+    response = @conn.get("matches/#{id}")
     log_rate_limit(response)
     return nil unless response.status == 200
     response.body
@@ -22,7 +22,7 @@ class FootballDataService
 
   # Returns array of match objects for a competition
   def competition_matches(competition: "WC", season: 2026)
-    response = @conn.get("/competitions/#{competition}/matches", { season: season })
+    response = @conn.get("competitions/#{competition}/matches", { season: season })
     log_rate_limit(response)
     return [] unless response.status == 200
     response.body["matches"] || []
