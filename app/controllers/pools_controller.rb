@@ -1,4 +1,5 @@
 class PoolsController < ApplicationController
+  skip_before_action :authenticate_user!, only: [:invite]
   def show
     @pool = Pool.find(params[:id])
     require_approved_membership!(@pool)

@@ -48,7 +48,17 @@
         <% @matches.each do |m| %>
           <tr style="border-bottom:1px solid #f3f4f6;">
             <td style="padding:14px 20px; font-size:14px; font-weight:500; color:#111827;">
-              🇧🇷 <%= m.home_team %> <span style="color:#9ca3af; margin:0 4px;">×</span> <%= m.away_team %>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <% if m.home_crest.present? %>
+                  <img src="<%= m.home_crest %>" alt="" style="width:20px;height:20px;object-fit:contain;">
+                <% end %>
+                <%= m.home_team %>
+                <span style="color:#9ca3af; margin:0 2px;">×</span>
+                <%= m.away_team %>
+                <% if m.away_crest.present? %>
+                  <img src="<%= m.away_crest %>" alt="" style="width:20px;height:20px;object-fit:contain;">
+                <% end %>
+              </div>
             </td>
             <td style="padding:14px 20px; font-size:13px; color:#374151;"><%= m.kickoff_at.strftime("%d/%m/%Y %H:%M") %></td>
             <td style="padding:14px 20px;">
@@ -70,12 +80,15 @@
             </td>
             <td style="padding:14px 20px; font-size:13px; color:#374151;"><%= m.bets.count %></td>
             <td style="padding:14px 20px;">
-              <div style="display:flex; gap:12px; justify-content:flex-end;">
+              <div style="display:flex; gap:12px; justify-content:flex-end; align-items:center;">
                 <%= link_to "Editar", edit_admin_pool_match_path(@pool, m), style: "font-size:12px; color:#6b7280; text-decoration:none;" %>
                 <% if m.api_football_id.present? %>
                   <%= button_to "Sync", sync_result_admin_pool_match_path(@pool, m), method: :post,
                         style: "font-size:12px; color:#002776; background:none; border:none; cursor:pointer; padding:0;" %>
                 <% end %>
+                <%= button_to "Excluir", admin_pool_match_path(@pool, m), method: :delete,
+                      style: "font-size:12px; color:#dc2626; background:none; border:none; cursor:pointer; padding:0;",
+                      data: { turbo_confirm: "Excluir o jogo #{m.home_team} x #{m.away_team}?" } %>
               </div>
             </td>
           </tr>

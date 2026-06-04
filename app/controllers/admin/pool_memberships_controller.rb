@@ -1,7 +1,7 @@
 module Admin
   class PoolMembershipsController < BaseController
     before_action :set_pool
-    before_action :set_membership, only: [:approve, :reject]
+    before_action :set_membership, only: [:approve, :reject, :destroy]
 
     def index
       @memberships = @pool.pool_memberships.includes(:user).order(created_at: :desc)
@@ -17,6 +17,12 @@ module Admin
       @membership.reject!
       ParticipantMailer.rejected(@membership).deliver_later
       redirect_to admin_pool_pool_memberships_path(@pool), notice: "#{@membership.user.name} rejeitado."
+    end
+
+    def destroy
+      name = @membership.user.name
+      @membership.destroy
+      redirect_to admin_pool_pool_memberships_path(@pool), notice: "#{name} removido do bolão."
     end
 
     private

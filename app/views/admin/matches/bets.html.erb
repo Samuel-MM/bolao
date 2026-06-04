@@ -93,6 +93,7 @@
           <th class="px-5 py-3 text-left font-medium text-gray-600">Pagamento</th>
           <th class="px-5 py-3 text-left font-medium text-gray-600">Chave PIX</th>
           <th class="px-5 py-3 text-left font-medium text-gray-600">Apostado em</th>
+          <th></th>
         </tr>
       </thead>
       <tbody class="divide-y">
@@ -141,6 +142,13 @@
               <% end %>
             </td>
             <td class="px-5 py-3 text-gray-500 text-xs"><%= bet.created_at.strftime("%d/%m %H:%M") %></td>
+            <td class="px-5 py-3">
+              <%= button_to "Excluir",
+                    admin_pool_match_bet_path(@pool, @match, bet),
+                    method: :delete,
+                    class: "text-xs text-red-500 hover:underline bg-transparent border-0 p-0 cursor-pointer",
+                    data: { turbo_confirm: "Excluir a aposta de #{bet.user.name}? Esta ação não pode ser desfeita." } %>
+            </td>
           </tr>
         <% end %>
       </tbody>

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get "/", to: "dashboard#index", as: :dashboard
     resources :pools do
-      resources :pool_memberships, only: [:index] do
+      resources :pool_memberships, only: [:index, :destroy] do
         member do
           patch :approve
           patch :reject
@@ -19,6 +19,7 @@ Rails.application.routes.draw do
           post :sync_result
           get  :bets
         end
+        resources :bets, only: [:destroy]
       end
     end
     resources :payments, only: [:index, :show] do
