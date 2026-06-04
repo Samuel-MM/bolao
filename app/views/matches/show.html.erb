@@ -1,5 +1,13 @@
 <div class="mb-6">
-  <h1 class="text-2xl font-bold" style="color:#002776;"><%= @match.home_team %> x <%= @match.away_team %></h1>
+  <div class="flex items-center gap-3 mb-1">
+    <% if @match.home_crest.present? %>
+      <img src="<%= @match.home_crest %>" alt="<%= @match.home_team %>" style="width:36px;height:36px;object-fit:contain;">
+    <% end %>
+    <h1 class="text-2xl font-bold" style="color:#002776;"><%= @match.home_team %> x <%= @match.away_team %></h1>
+    <% if @match.away_crest.present? %>
+      <img src="<%= @match.away_crest %>" alt="<%= @match.away_team %>" style="width:36px;height:36px;object-fit:contain;">
+    <% end %>
+  </div>
   <p class="text-gray-500 text-sm mt-1"><%= @match.kickoff_at.strftime("%d/%m/%Y às %H:%M") %> — <%= @pool.name %></p>
   <%= link_to "← Voltar ao bolão", pool_path(@pool), class: "text-sm text-gray-500 hover:underline" %>
 </div>

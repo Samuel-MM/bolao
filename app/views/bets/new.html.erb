@@ -20,6 +20,9 @@
       <p class="text-xs text-gray-500 mb-3 font-medium uppercase tracking-wide">Seu palpite</p>
       <div class="flex items-center justify-center gap-4">
         <div class="text-center">
+          <% if @match.home_crest.present? %>
+            <img src="<%= @match.home_crest %>" alt="" style="width:32px;height:32px;object-fit:contain;margin:0 auto 4px;">
+          <% end %>
           <p class="text-xs text-gray-500 mb-1 font-medium"><%= @match.home_team %></p>
           <%= f.number_field :home_score, min: 0, max: 20,
                 class: "w-16 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg py-2 focus:outline-none focus:border-green-500",
@@ -27,6 +30,9 @@
         </div>
         <span class="text-2xl font-bold text-gray-400">×</span>
         <div class="text-center">
+          <% if @match.away_crest.present? %>
+            <img src="<%= @match.away_crest %>" alt="" style="width:32px;height:32px;object-fit:contain;margin:0 auto 4px;">
+          <% end %>
           <p class="text-xs text-gray-500 mb-1 font-medium"><%= @match.away_team %></p>
           <%= f.number_field :away_score, min: 0, max: 20,
                 class: "w-16 text-center text-2xl font-bold border-2 border-gray-300 rounded-lg py-2 focus:outline-none focus:border-green-500",

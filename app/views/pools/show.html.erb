@@ -14,7 +14,17 @@
       <% @matches.each do |match| %>
         <div class="px-5 py-4 flex items-center justify-between">
           <div>
-            <p class="font-medium text-gray-800">🇧🇷 <%= match.home_team %> vs <%= match.away_team %></p>
+            <p class="font-medium text-gray-800 flex items-center gap-1.5">
+              <% if match.home_crest.present? %>
+                <img src="<%= match.home_crest %>" alt="" style="width:20px;height:20px;object-fit:contain;">
+              <% end %>
+              <%= match.home_team %>
+              <span class="text-gray-400 mx-0.5">vs</span>
+              <%= match.away_team %>
+              <% if match.away_crest.present? %>
+                <img src="<%= match.away_crest %>" alt="" style="width:20px;height:20px;object-fit:contain;">
+              <% end %>
+            </p>
             <p class="text-xs text-gray-500 mt-0.5"><%= match.kickoff_at.strftime("%d/%m/%Y às %H:%M") %></p>
             <% if match.finished? %>
               <p class="text-xs font-semibold mt-1" style="color:#009C3B;">

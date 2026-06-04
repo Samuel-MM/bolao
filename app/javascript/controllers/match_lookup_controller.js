@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["matchId", "homeTeam", "awayTeam", "kickoffAt", "button", "feedback"]
+  static targets = ["matchId", "homeTeam", "awayTeam", "kickoffAt", "homeCrest", "awayCrest", "button", "feedback"]
   static values  = { url: String }
 
   async lookup() {
@@ -22,6 +22,8 @@ export default class extends Controller {
         this.homeTeamTarget.value  = data.home_team  || ""
         this.awayTeamTarget.value  = data.away_team  || ""
         this.kickoffAtTarget.value = this.#toLocalDatetime(data.kickoff_at)
+        this.homeCrestTarget.value = data.home_crest || ""
+        this.awayCrestTarget.value = data.away_crest || ""
         this.feedbackTarget.textContent = "✓ Dados preenchidos"
         this.feedbackTarget.style.color = "#15803d"
         this.buttonTarget.textContent = "Buscar da API"

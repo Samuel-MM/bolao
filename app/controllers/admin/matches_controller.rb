@@ -17,7 +17,9 @@ module Admin
       render json: {
         home_team:  data.dig("homeTeam", "name"),
         away_team:  data.dig("awayTeam", "name"),
-        kickoff_at: data["utcDate"]
+        kickoff_at: data["utcDate"],
+        home_crest: data.dig("homeTeam", "crest"),
+        away_crest: data.dig("awayTeam", "crest")
       }
     end
 
@@ -75,7 +77,8 @@ module Admin
 
     def match_params
       params.require(:match).permit(:home_team, :away_team, :kickoff_at, :api_football_id,
-                                    :status, :home_score, :away_score, :bonus_prize)
+                                    :status, :home_score, :away_score, :bonus_prize,
+                                    :home_crest, :away_crest)
     end
   end
 end

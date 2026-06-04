@@ -35,6 +35,9 @@
     <p style="font-size:12px; margin-top:6px;" data-match-lookup-target="feedback"></p>
   </div>
 
+  <%= f.hidden_field :home_crest, data: { "match-lookup-target": "homeCrest" } %>
+  <%= f.hidden_field :away_crest, data: { "match-lookup-target": "awayCrest" } %>
+
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
     <div>
       <%= f.label :home_team, "Time da casa", style: label_style %>
