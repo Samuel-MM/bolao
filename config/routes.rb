@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       resources :matches, only: [:index, :new, :create, :edit, :update, :destroy] do
         member do
           post :sync_result
+          get  :bets
         end
       end
     end

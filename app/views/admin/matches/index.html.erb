@@ -31,10 +31,13 @@
             </span>
           </td>
           <td class="px-5 py-3 text-gray-600"><%= m.finished? ? "#{m.home_score} x #{m.away_score}" : "—" %></td>
-          <td class="px-5 py-3 text-gray-600"><%= m.bets.count %></td>
+          <td class="px-5 py-3 text-gray-600">
+            <%= link_to m.bets.count, bets_admin_pool_match_path(@pool, m), class: "text-blue-600 hover:underline font-medium" %>
+          </td>
           <td class="px-5 py-3">
             <div class="flex gap-2">
               <%= link_to "Editar", edit_admin_pool_match_path(@pool, m), class: "text-gray-500 hover:underline text-xs" %>
+              <%= link_to "Apostas", bets_admin_pool_match_path(@pool, m), class: "text-blue-600 hover:underline text-xs" %>
               <% if m.api_football_id.present? %>
                 <%= button_to "Sync", sync_result_admin_pool_match_path(@pool, m), method: :post,
                       class: "text-blue-600 hover:underline text-xs bg-transparent border-0 p-0 cursor-pointer" %>

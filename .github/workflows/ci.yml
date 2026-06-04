@@ -110,3 +110,4 @@ jobs:
             docker compose run --rm --no-deps --entrypoint="" web bundle exec rails db:migrate
             docker compose up -d --no-deps web worker
             docker image prune -f
+            docker restart bolao-nginx-1

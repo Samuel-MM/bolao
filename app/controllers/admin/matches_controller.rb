@@ -1,7 +1,7 @@
 module Admin
   class MatchesController < BaseController
     before_action :set_pool
-    before_action :set_match, only: [:edit, :update, :destroy, :sync_result]
+    before_action :set_match, only: [:edit, :update, :destroy, :sync_result, :bets]
 
     def index
       @matches = @pool.matches.order(:kickoff_at)
@@ -23,11 +23,20 @@ module Admin
     def edit; end
 
     def update
+      was_finished = @match.finished?
       if @match.update(match_params)
+        MatchResultJob.perform_later(@match.id) if @match.finished? && !was_finished
         redirect_to admin_pool_matches_path(@pool), notice: "Jogo atualizado."
       else
         render :edit, status: :unprocessable_entity
       end
+    end
+
+    def bets
+      @bets = @match.bets
+                    .includes(:user, :payment)
+                    .order(created_at: :asc)
+      @winning_ids = @match.finished? ? @match.winning_bets.ids : []
     end
 
     def destroy
